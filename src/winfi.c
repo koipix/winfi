@@ -1,5 +1,8 @@
 #include <windows.h>
 
+#define WINDOW_WIDTH  500
+#define WINDOW_HEIGHT 300
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
         case WM_DESTROY:
@@ -27,13 +30,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
     RegisterClass(&wc);
 
+    //center window
+    int screen_width = GetSystemMetrics(SM_CXSCREEN);
+    int screen_height = GetSystemMetrics(SM_CYSCREEN);
+    
+    int x_pos = (screen_width - WINDOW_WIDTH) / 2;
+    int y_pos = (screen_height - WINDOW_HEIGHT) / 2;
+
     HWND hwnd = CreateWindowEx(
         WS_EX_TOPMOST,
         CLASS_NAME,
         L"winfi",
         WS_POPUP,
-        400, 300,
-        500, 300,
+        x_pos, y_pos,
+        WINDOW_WIDTH, WINDOW_HEIGHT,
         NULL, NULL,
         hInstance, NULL
     );
