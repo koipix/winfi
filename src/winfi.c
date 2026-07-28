@@ -5,6 +5,23 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
+        case WM_CREATE:
+            HINSTANCE hInstance = (HINSTANCE) GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
+
+            HWND hEdit = CreateWindowEx(
+                0,
+                L"EDIT",
+                L"",
+                WS_CHILD | WS_VISIBLE | WS_BORDER,
+                10, 10,
+                WINDOW_WIDTH - 20, 30,
+                hwnd,
+                (HMENU) 1,
+                hInstance,
+                NULL
+            );
+            return 0;
+
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;  
