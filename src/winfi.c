@@ -2,6 +2,15 @@
 
 #define WINDOW_WIDTH  500
 #define WINDOW_HEIGHT 300
+#define MAX_RESULTS 5
+
+const wchar_t* exec[MAX_RESULTS] = {
+    L"Notepad",
+    L"Wubwub",
+    L"Discord",
+    L"Ping",
+    L"Soundcloud"
+};
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
@@ -30,6 +39,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             if (wParam == VK_ESCAPE) {
                 DestroyWindow(hwnd);
             }
+            return 0;
+        
+        case WM_PAINT:
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+
+            int row_height = 30;
+            int start_y = 50;
+
+            for (int i = 0; i < MAX_RESULTS; i++) {
+                RECT row_rect = { 10, start_y + (i + row_height), 
+                    WINDOW_WIDTH - 10, start_y + ((i + 1) * row_height)};
+                DrawText(hdc, exec[i], -1, &row_rect, DT_LEFT | DT_CENTER | DT_SINGLELINE);
+            }
+
+            EndPaint(hwnd, &ps);
             return 0;
     }
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -73,9 +98,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
     MSG msg = {0};
     while (GetMessage(&msg, NULL, 0, 0)) {
+        if (msg.wParam == VK_ESCAPE) {
+            DestroyWindow(hwnd);
+            continue;
+        }
+
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
     return 0;
 }
