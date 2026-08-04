@@ -40,8 +40,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 DestroyWindow(hwnd);
             }
             return 0;
-        
-        case WM_PAINT:
+
+        case WM_PAINT: {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
 
@@ -49,13 +49,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             int start_y = 50;
 
             for (int i = 0; i < MAX_RESULTS; i++) {
-                RECT row_rect = { 10, start_y + (i + row_height), 
-                    WINDOW_WIDTH - 10, start_y + ((i + 1) * row_height)};
-                DrawText(hdc, exec[i], -1, &row_rect, DT_LEFT | DT_CENTER | DT_SINGLELINE);
+                RECT row_rect = {
+                    10, start_y + (i * row_height),
+                    WINDOW_WIDTH - 10,
+                    start_y + ((i + 1) * row_height)};
+
+                DrawText(hdc, exec[i], -1, &row_rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
             }
 
             EndPaint(hwnd, &ps);
             return 0;
+        }
     }
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
